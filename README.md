@@ -23,11 +23,5 @@ Install uFR with pip
 
 uFR is licensed with the [MIT](https://choosealicense.com/licenses/mit/) License
 
-## Usage
-
-If you are using `ufr chunk`, its recommended to pipe it to `less`
-```bash
-ufr chunk | less
-```
 
 

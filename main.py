@@ -1,4 +1,4 @@
-import xmltodict, os, sys, datetime, requests, inscriptis
+import xmltodict, os, sys, datetime, requests, inscriptis, pydoc
 from urllib.parse import urlparse
 import signal
 signal.signal(signal.SIGPIPE, signal.SIG_DFL)
@@ -78,41 +78,37 @@ def _fetchallFeeds():
 def _addURL(url):
     with open(f"{os.path.join(os.path.expanduser('~'), '.local', 'share', 'ufr', 'Feeds')}", 'a') as ufrlist:
         ufrlist.write(f"{url}\n")
-def read(feedFile):
+def read(feedFile, page=True):
     try:
         if not os.path.isfile(feedFile):
             raise FileNotFoundError("Could not find the RSS Feed")
         feed = getFeedinfo(feedFile)
-        print(feed['Name'])
-        print(feed['URL'])
-        print(feed['Description'])
-        print(f"Language: {feed['Language']}")
-        print("===================================")
+        result = f"{feed['Name']}\n{feed['URL']}\n{feed['Description']}\nLanguage: {feed['Language']}\n===================================\n"
         for i in feed['Items']:
-            print(i['Title'])
-            print(i['URL'])
-            print("---")
-            print(inscriptis.get_text(i['Desc']))
-            print("---")
-            print(f'{i['pubDate']} - {i['GUID']}')
-            print("-------------------------------")    
+            result += f"{i['Title']}\n{i['URL']}\n---\n{inscriptis.get_text(i['Desc'])}\n---\n{i['pubDate']} - {i['GUID']}\n-------------------------------\n"
+        if not page:
+            print(result)
+        else:   
+            pydoc.pager(result)
     except Exception as e:
         raise e
-def _chunkView():
+def _chunkView(page=True):
     feeds = os.listdir(os.path.join(os.path.expanduser('~'), '.local', 'share', 'ufr', 'rss'))
     if not feeds:
         return False
     for feed in feeds:
-        read(os.path.join(os.path.expanduser('~'), '.local', 'share', 'ufr', 'rss', feed))
+        read(os.path.join(os.path.expanduser('~'), '.local', 'share', 'ufr', 'rss', feed), page)
     return True
 def _help():
     print(f"uFR - unnamed Feed Reader - Version {version}            ")
     print(f" Available Commands:                                     ")
-    print(f"  read <feedfile>    -   Read a RSS File                 ")
-    print(f"  add  <url>         -   Add an RSS Feed to your feedlist")
-    print(f"  update             -   Update your feedlist            ")
-    print(f"  chunk              -   View every feed in your feedlist")
-    print(f"  help               -   Show this text                  ")
+    print(f"  read <feedfile>       -   Read a RSS File                 ")
+    print(f"  add  <url>            -   Add an RSS Feed to your feedlist")
+    print(f"  update                -   Update your feedlist            ")
+    print(f"  chunk                 -   View every feed in your feedlist")
+    print(f"  help                  -   Show this text                  ")
+    print(f" Flags:                                                  ")
+    print(f"  <read/chunk> --nopage -   Disable Paging                 ")
     sys.exit(0)
 
 def _main():
@@ -128,7 +124,10 @@ def _main():
                 if len(args) < 2:
                     print("  Usage: <<ufr read [feed file]>>")
                     sys.exit(1)          
-                read(args[1])
+                page = True
+                if "--nopage" in sys.argv:
+                    page = False
+                read(args[1], page)
             case 'help':
                 _help()
             case 'add':
@@ -139,7 +138,10 @@ def _main():
             case 'update':
                 _fetchallFeeds()    
             case 'chunk':
-                resp = _chunkView() 
+                page = True
+                if "--nopage" in sys.argv:
+                    page = False
+                resp = _chunkView(page) 
                 if resp == False:
                     print("Your feedlist is empty")
                     sys.exit(1)          

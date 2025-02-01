@@ -9,8 +9,8 @@ url="https://github.com/juanvel4000/ufr"
 license=('MIT')
 depends=('python' 'python-requests' 'python-xmltodict' 'python-inscriptis')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/10/53/64bd6a8df0d327c70e9c6d04d1fa3c3ed8be846db7f351044862edf8beb3/unnfr-0.2.3.tar.gz")
-sha256sums=('490985755568d547bb76dc513ecbe243472c9c7f9b87cf4c72bf3cc4fc57512e')
+source=("https://files.pythonhosted.org/packages/fc/a5/1b4140e3d55d7f2e1af3f3a314687d56013d7f0a58a19ffd53cf7ef93458/unnfr-0.2.4.tar.gz")
+sha256sums=('5c4e0bdc7e20320e01604751ff593c177b6d2ca072d26510fce962fed6032b53')
 
 build() {
     cd "$pkgname-$pkgver"

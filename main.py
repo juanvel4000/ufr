@@ -1,5 +1,6 @@
 import xmltodict, os, sys, datetime, requests
 from urllib.parse import urlparse
+version = "0.2.1"
 def getFeedinfo(feed):
     
     if os.path.isfile(feed):
@@ -72,7 +73,7 @@ def _fetchallFeeds():
             target_path = os.path.join(target_dir, filename)
             with open(target_path, 'w', encoding='utf-8') as feed:
                 feed.write(response.text)
-            print(f"Saved feed from {url} to {target_path}")
+            print(f"Saved feed from {url}")
 def read(feedFile):
     try:
         if not os.path.isfile(feedFile):
@@ -88,7 +89,7 @@ def read(feedFile):
             print(i['URL'])
             print(i['Desc'])
             print(f'{i['pubDate']} - {i['GUID']}')
-            print("--------------------------")    
+            print("-------------------------------")    
     except Exception as e:
         raise e
 def _chunkView():
@@ -99,40 +100,48 @@ def _chunkView():
         read(os.path.join(os.path.expanduser('~'), '.local', 'ufr', feed))
     return True
 def _help():
-    print("uFM - unnamed Feed Reader")
-    print("Available Commands:")
-    print(" read <feedfile>    -   Read a RSS File")
-    print(" add  <url>         -   Add an RSS Feed to your feedlist")
-    print(" update             -   Update your feedlist")
-    print(" chunk              -   View every feed in your feedlist")
-    print(" help               -   Show this text")
+    print(f"uFR - unnamed Feed Reader - Version {version}            ")
+    print(f" Available Commands:                                     ")
+    print(f"  read <feedfile>    -   Read a RSS File                 ")
+    print(f"  add  <url>         -   Add an RSS Feed to your feedlist")
+    print(f"  update             -   Update your feedlist            ")
+    print(f"  chunk              -   View every feed in your feedlist")
+    print(f"  help               -   Show this text                  ")
     sys.exit(0)
 
 def _main():
-    args = sys.argv[1:]
-    if not args:
-        _help()
-    command = args[0]
-    match command:
-        case 'read':
-            if len(args) < 2:
+    try:
+        args = sys.argv[1:]
+        if not args:
+            print("  Please view <<ufr help>> for a list of commands")
+            sys.exit(1)
+        command = args[0]
+        match command:
+            case 'read':
+                if len(args) < 2:
+                    print("  Usage: <<ufr read [feed file]>>")
+                    sys.exit(1)          
+                read(args[1])
+            case 'help':
                 _help()
-            read(args[1])
-        case 'help':
-            _help()
-        case 'add':
-            if len(args) < 2:
-                _help()
-            _addURL(sys.argv[2])
-        case 'update':
-            _fetchallFeeds()    
-        case 'chunk':
-            resp = _chunkView() 
-            if resp == False:
-                print("Your feedlist is empty")
-        case _:
-            _help()
-    sys.exit(0)
+            case 'add':
+                if len(args) < 2:
+                    print("  Usage: <<ufr add [URL]>>")
+                    sys.exit(1)          
+                _addURL(sys.argv[2])
+            case 'update':
+                _fetchallFeeds()    
+            case 'chunk':
+                resp = _chunkView() 
+                if resp == False:
+                    print("Your feedlist is empty")
+                    sys.exit(1)          
+            case _:
+                print("Unknown command, please view <<ufr help>>")  
+                sys.exit(1)          
+        sys.exit(0)
+    except Exception as e:
+        print(f'Fatal: {e}')
 
 if __name__ == "__main__":
     _main()

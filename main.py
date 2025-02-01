@@ -1,6 +1,6 @@
-import xmltodict, os, sys, datetime, requests
+import xmltodict, os, sys, datetime, requests, inscriptis
 from urllib.parse import urlparse
-version = "0.2.1"
+version = "0.2.2"
 def getFeedinfo(feed):
     
     if os.path.isfile(feed):
@@ -87,7 +87,9 @@ def read(feedFile):
         for i in feed['Items']:
             print(i['Title'])
             print(i['URL'])
-            print(i['Desc'])
+            print("---")
+            print(inscriptis.get_text(i['Desc']))
+            print("---")
             print(f'{i['pubDate']} - {i['GUID']}')
             print("-------------------------------")    
     except Exception as e:

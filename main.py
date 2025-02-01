@@ -3,7 +3,7 @@ from urllib.parse import urlparse
 import signal
 signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
-version = "0.2.3"
+version = "0.2.4"
 
 def getFeedinfo(feed):
     

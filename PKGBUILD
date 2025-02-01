@@ -1,7 +1,7 @@
 # shellcheck disable=SC2148
 # Maintainer: juanvel400 <juanvel400@proton.me>
 pkgname=unnfr
-pkgver=0.2.3
+pkgver=0.2.4
 pkgrel=1
 pkgdesc="A simple RSS Reader written in python"
 arch=(any)

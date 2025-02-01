@@ -98,15 +98,19 @@ def _chunkView(page=True):
     return True
 
 def _help():
-    print(f"uFR - unnamed Feed Reader - Version {version}               ")
-    print(f" Available Commands:                                        ")
-    print(f"  read <feedfile>       -   Read a RSS File                 ")
-    print(f"  add  <url>            -   Add an RSS Feed to your feedlist")
-    print(f"  update                -   Update your feedlist            ")
-    print(f"  chunk                 -   View every feed in your feedlist")
-    print(f"  help                  -   Show this text                  ")
-    print(f" Flags:                                                     ")
-    print(f"  <read/chunk> --nopage -   Disable Paging                  ")
+    print(f"uFR {version}")
+    print("unnamed Feed Reader")
+    print("Usage: uFR [options]")
+    print(" Feed reading:")
+    print("  read [file] [options]          -       Read an .rss file")
+    print("  add [url]                      -       Add a URL to the feed list")
+    print("  update                         -       Download all the feeds from the feed list")
+    print("  chunk                          -       Read all the downloaded feeds")
+    print(" Options:")
+    print("  [read [...]/chunk] --nopage    –       Disable paging (output everything at once)")
+    print(" uFR Meta:")
+    print("  --version                      -       The current uFR version")
+    print("  help                           -       View this help message")
     sys.exit(0)
 
 def _main():
@@ -143,6 +147,8 @@ def _main():
                 if resp == False:
                     print("Your feedlist is empty")
                     sys.exit(1)          
+            case '--version':
+                print(f"uFR {version}")
             case _:
                 print("Unknown command, please view \"ufr help\"")  
                 sys.exit(1)          

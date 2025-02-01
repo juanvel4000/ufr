@@ -1,6 +1,10 @@
 import xmltodict, os, sys, datetime, requests, inscriptis
 from urllib.parse import urlparse
-version = "0.2.2"
+import signal
+signal.signal(signal.SIGPIPE, signal.SIG_DFL)
+
+version = "0.2.3"
+
 def getFeedinfo(feed):
     
     if os.path.isfile(feed):
@@ -42,15 +46,12 @@ def getPost(feedInfo, title):
         else:
             return i
     return False
-def _addURL(url):
-    with open(f"{os.path.expanduser('~')}/.ufr-list", 'a') as ufrlist:
-        ufrlist.write(f"{url}\n")
 
 def _fetchallFeeds():
-    target_dir = os.path.join(os.path.expanduser('~'), '.local', 'ufr')
+    target_dir = os.path.join(os.path.expanduser('~'), '.local', 'share', 'ufr', 'rss')
     os.makedirs(target_dir, exist_ok=True)
     
-    feed_list_path = f"{os.path.expanduser('~')}/.ufr-list"
+    feed_list_path = os.path.join(os.path.expanduser('~'), '.local', 'share', 'ufr', 'Feeds')
     if not os.path.isfile(feed_list_path):
         print("Please add a feed to your feedlist, using <<ufr add [URL]>>")
         return False
@@ -74,6 +75,9 @@ def _fetchallFeeds():
             with open(target_path, 'w', encoding='utf-8') as feed:
                 feed.write(response.text)
             print(f"Saved feed from {url}")
+def _addURL(url):
+    with open(f"{os.path.join(os.path.expanduser('~'), '.local', 'share', 'ufr', 'Feeds')}", 'a') as ufrlist:
+        ufrlist.write(f"{url}\n")
 def read(feedFile):
     try:
         if not os.path.isfile(feedFile):
@@ -95,11 +99,11 @@ def read(feedFile):
     except Exception as e:
         raise e
 def _chunkView():
-    feeds = os.listdir(os.path.join(os.path.expanduser('~'), '.local', 'ufr'))
+    feeds = os.listdir(os.path.join(os.path.expanduser('~'), '.local', 'share', 'ufr', 'rss'))
     if not feeds:
         return False
     for feed in feeds:
-        read(os.path.join(os.path.expanduser('~'), '.local', 'ufr', feed))
+        read(os.path.join(os.path.expanduser('~'), '.local', 'share', 'ufr', 'rss', feed))
     return True
 def _help():
     print(f"uFR - unnamed Feed Reader - Version {version}            ")
@@ -113,6 +117,7 @@ def _help():
 
 def _main():
     try:
+        os.makedirs(os.path.join(os.path.expanduser('~'), '.local', 'share', 'ufr'), exist_ok=True)
         args = sys.argv[1:]
         if not args:
             print("  Please view <<ufr help>> for a list of commands")

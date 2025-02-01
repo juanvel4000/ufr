@@ -1,7 +1,10 @@
 # shellcheck disable=SC2148
+# shellcheck disable=SC2034
+# shellcheck disable=SC2164
+# shellcheck disable=SC2154
 # Maintainer: juanvel400 <juanvel400@proton.me>
 pkgname=unnfr
-pkgver=0.2.4
+pkgver=0.2.5
 pkgrel=1
 pkgdesc="A simple RSS Reader written in python"
 arch=(any)
@@ -9,8 +12,8 @@ url="https://github.com/juanvel4000/ufr"
 license=('MIT')
 depends=('python' 'python-requests' 'python-xmltodict' 'python-inscriptis')
 makedepends=('python-setuptools')
-source=("https://files.pythonhosted.org/packages/fc/a5/1b4140e3d55d7f2e1af3f3a314687d56013d7f0a58a19ffd53cf7ef93458/unnfr-0.2.4.tar.gz")
-sha256sums=('5c4e0bdc7e20320e01604751ff593c177b6d2ca072d26510fce962fed6032b53')
+source=("https://files.pythonhosted.org/packages/85/c0/a8bbd80b9aa6a988ce6523f91dd112f4d37002de3a9e039b8b241ebb184c/unnfr-0.2.5.tar.gz")
+sha256sums=('a6422499d0a84fe0be06e1d9f5298e0b4fe76748595bc861d46089e0743eaa98')
 
 build() {
     cd "$pkgname-$pkgver"
